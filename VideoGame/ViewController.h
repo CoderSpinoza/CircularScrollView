@@ -7,7 +7,14 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "InfiniteScrollView.h"
+#import "AVPlayerView.h"
+
+@import AVFoundation;
 
 @interface ViewController : UIViewController
+
+@property (weak, nonatomic) IBOutlet InfiniteScrollView *infiniteScrollView;
+@property (strong, nonatomic) NSMutableArray *dataArray;
 
 @end

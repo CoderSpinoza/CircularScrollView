@@ -7,6 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		C2E3D6B818458CFA00E526B6 /* videos.xml in Resources */ = {isa = PBXBuildFile; fileRef = C2E3D6B718458CFA00E526B6 /* videos.xml */; };
+		C2EC19721843E3C80010DCE5 /* fire.mov in Resources */ = {isa = PBXBuildFile; fileRef = C2EC196F1843E3C80010DCE5 /* fire.mov */; };
+		C2EC19731843E3C80010DCE5 /* dancing.mov in Resources */ = {isa = PBXBuildFile; fileRef = C2EC19701843E3C80010DCE5 /* dancing.mov */; };
+		C2EC19741843E3C80010DCE5 /* hills.mov in Resources */ = {isa = PBXBuildFile; fileRef = C2EC19711843E3C80010DCE5 /* hills.mov */; };
+		C2EC19771843E4DD0010DCE5 /* AVPlayerView.m in Sources */ = {isa = PBXBuildFile; fileRef = C2EC19761843E4DD0010DCE5 /* AVPlayerView.m */; };
 		C2F68B761842D3D400671456 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C2F68B751842D3D400671456 /* Foundation.framework */; };
 		C2F68B781842D3D400671456 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C2F68B771842D3D400671456 /* CoreGraphics.framework */; };
 		C2F68B7A1842D3D400671456 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C2F68B791842D3D400671456 /* UIKit.framework */; };
@@ -22,6 +27,7 @@
 		C2F68B9A1842D3D400671456 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C2F68B791842D3D400671456 /* UIKit.framework */; };
 		C2F68BA21842D3D400671456 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = C2F68BA01842D3D400671456 /* InfoPlist.strings */; };
 		C2F68BA41842D3D400671456 /* VideoGameTests.m in Sources */ = {isa = PBXBuildFile; fileRef = C2F68BA31842D3D400671456 /* VideoGameTests.m */; };
+		C2F68BAF1842D3FC00671456 /* InfiniteScrollView.m in Sources */ = {isa = PBXBuildFile; fileRef = C2F68BAE1842D3FC00671456 /* InfiniteScrollView.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -35,6 +41,13 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		C29B5C741845923C001D29B7 /* libxml2.2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libxml2.2.dylib; path = usr/lib/libxml2.2.dylib; sourceTree = SDKROOT; };
+		C2E3D6B718458CFA00E526B6 /* videos.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = videos.xml; sourceTree = "<group>"; };
+		C2EC196F1843E3C80010DCE5 /* fire.mov */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; path = fire.mov; sourceTree = "<group>"; };
+		C2EC19701843E3C80010DCE5 /* dancing.mov */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; path = dancing.mov; sourceTree = "<group>"; };
+		C2EC19711843E3C80010DCE5 /* hills.mov */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; path = hills.mov; sourceTree = "<group>"; };
+		C2EC19751843E4DD0010DCE5 /* AVPlayerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AVPlayerView.h; sourceTree = "<group>"; };
+		C2EC19761843E4DD0010DCE5 /* AVPlayerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AVPlayerView.m; sourceTree = "<group>"; };
 		C2F68B721842D3D400671456 /* VideoGame.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = VideoGame.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C2F68B751842D3D400671456 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		C2F68B771842D3D400671456 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -55,6 +68,8 @@
 		C2F68B9F1842D3D400671456 /* VideoGameTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "VideoGameTests-Info.plist"; sourceTree = "<group>"; };
 		C2F68BA11842D3D400671456 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		C2F68BA31842D3D400671456 /* VideoGameTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = VideoGameTests.m; sourceTree = "<group>"; };
+		C2F68BAD1842D3FC00671456 /* InfiniteScrollView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = InfiniteScrollView.h; sourceTree = "<group>"; };
+		C2F68BAE1842D3FC00671456 /* InfiniteScrollView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = InfiniteScrollView.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -103,6 +118,7 @@
 		C2F68B741842D3D400671456 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				C29B5C741845923C001D29B7 /* libxml2.2.dylib */,
 				C2F68B751842D3D400671456 /* Foundation.framework */,
 				C2F68B771842D3D400671456 /* CoreGraphics.framework */,
 				C2F68B791842D3D400671456 /* UIKit.framework */,
@@ -114,12 +130,17 @@
 		C2F68B7B1842D3D400671456 /* VideoGame */ = {
 			isa = PBXGroup;
 			children = (
+				C2E3D6B718458CFA00E526B6 /* videos.xml */,
 				C2F68B841842D3D400671456 /* AppDelegate.h */,
 				C2F68B851842D3D400671456 /* AppDelegate.m */,
 				C2F68B871842D3D400671456 /* Main_iPhone.storyboard */,
 				C2F68B8A1842D3D400671456 /* Main_iPad.storyboard */,
 				C2F68B8D1842D3D400671456 /* ViewController.h */,
 				C2F68B8E1842D3D400671456 /* ViewController.m */,
+				C2F68BAD1842D3FC00671456 /* InfiniteScrollView.h */,
+				C2F68BAE1842D3FC00671456 /* InfiniteScrollView.m */,
+				C2EC19751843E4DD0010DCE5 /* AVPlayerView.h */,
+				C2EC19761843E4DD0010DCE5 /* AVPlayerView.m */,
 				C2F68B901842D3D400671456 /* Images.xcassets */,
 				C2F68B7C1842D3D400671456 /* Supporting Files */,
 			);
@@ -129,6 +150,9 @@
 		C2F68B7C1842D3D400671456 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				C2EC196F1843E3C80010DCE5 /* fire.mov */,
+				C2EC19701843E3C80010DCE5 /* dancing.mov */,
+				C2EC19711843E3C80010DCE5 /* hills.mov */,
 				C2F68B7D1842D3D400671456 /* VideoGame-Info.plist */,
 				C2F68B7E1842D3D400671456 /* InfoPlist.strings */,
 				C2F68B811842D3D400671456 /* main.m */,
@@ -232,7 +256,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				C2F68B8C1842D3D400671456 /* Main_iPad.storyboard in Resources */,
+				C2EC19721843E3C80010DCE5 /* fire.mov in Resources */,
 				C2F68B911842D3D400671456 /* Images.xcassets in Resources */,
+				C2E3D6B818458CFA00E526B6 /* videos.xml in Resources */,
+				C2EC19731843E3C80010DCE5 /* dancing.mov in Resources */,
+				C2EC19741843E3C80010DCE5 /* hills.mov in Resources */,
 				C2F68B891842D3D400671456 /* Main_iPhone.storyboard in Resources */,
 				C2F68B801842D3D400671456 /* InfoPlist.strings in Resources */,
 			);
@@ -253,9 +281,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C2EC19771843E4DD0010DCE5 /* AVPlayerView.m in Sources */,
 				C2F68B8F1842D3D400671456 /* ViewController.m in Sources */,
 				C2F68B861842D3D400671456 /* AppDelegate.m in Sources */,
 				C2F68B821842D3D400671456 /* main.m in Sources */,
+				C2F68BAF1842D3FC00671456 /* InfiniteScrollView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -474,6 +504,7 @@
 				C2F68BA91842D3D400671456 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		C2F68BAA1842D3D400671456 /* Build configuration list for PBXNativeTarget "VideoGameTests" */ = {
 			isa = XCConfigurationList;
@@ -482,6 +513,7 @@
 				C2F68BAC1842D3D400671456 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
