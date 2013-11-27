@@ -36,7 +36,7 @@
     
     self.infiniteScrollView.infiniteDelegate = self;
     self.infiniteScrollView.dataSource = self;
-    
+    self.infiniteScrollView.circular = YES;
     NSString *xmlPath = [[NSBundle mainBundle] pathForResource:@"videos" ofType:@"xml"];
     NSData *xmlData = [NSData dataWithContentsOfFile:xmlPath];
     

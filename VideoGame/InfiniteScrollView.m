@@ -9,12 +9,17 @@
 #import "InfiniteScrollView.h"
 
 @interface InfiniteScrollView()
+
 @property (strong, nonatomic) NSMutableArray *views;
 @property (strong, nonatomic) NSMutableArray *hiddenTopViews;
 @property (strong, nonatomic) NSMutableArray *hiddenBottomViews;
 @property (strong, nonatomic) NSMutableArray *hiddenLeftViews;
 @property (strong, nonatomic) NSMutableArray *hiddenRightCiews;
 @property (strong, nonatomic) NSIndexPath *indexPath;
+@property (nonatomic, assign) CGRect circularFrame;
+@property (nonatomic, assign) CGRect originalFrame;
+@property (nonatomic, assign) CGRect circularContentSize;
+@property (nonatomic, assign) CGRect originalContentSize;
 
 @end
 
@@ -26,6 +31,17 @@
 @synthesize hiddenBottomViews = _hiddenBottomViews;
 @synthesize hiddenLeftViews = _hiddenLeftViews;
 @synthesize hiddenRightCiews = _hiddenRightViews;
+@synthesize circular = _circular;
+
+- (void)setCircular:(BOOL)circular {
+    _circular = circular;
+    [self setNeedsDisplay];
+}
+
+- (BOOL)circular {
+    return _circular;
+}
+
 - (NSMutableArray *)hiddenTopViews {
     if (_hiddenTopViews == nil) {
         _hiddenTopViews = [[NSMutableArray alloc] init];
@@ -74,6 +90,8 @@
 - (NSInteger)numColumns {
     return _numColumns - 2;
 }
+
+
 - (id)initWithFrame:(CGRect)frame
 {
     self = [super initWithFrame:frame];
@@ -118,41 +136,81 @@
     // Drawing code
     
     [self setSubviewFrames];
+    
     if (self.indexPath) {
-        self.contentOffset = CGPointMake((self.indexPath.row + 1) * [self currentSize].width, (self.indexPath.section + 1) * [self currentSize].height);
+        if (self.circular) {
+            self.contentOffset = CGPointMake((self.indexPath.row + 1) * [self currentSize].width, (self.indexPath.section + 1) * [self currentSize].height);
+        } else {
+            self.contentOffset = CGPointMake((self.indexPath.row ) * [self currentSize].width, (self.indexPath.section) * [self currentSize].height);
+        }
+        
     } else {
-        self.contentOffset = CGPointMake([self currentSize].width, [self currentSize].height);
+        if (self.circular) {
+            self.contentOffset = CGPointMake([self currentSize].width, [self currentSize].height);
+        } else {
+            self.contentOffset = CGPointMake(0, 0);
+        }
+        
     }
+    
 }
 
 - (void)setSubviewFrames {
     CGFloat width = _numColumns * [self currentSize].width;
     CGFloat height = _numRows * [self currentSize].height;
+    
+    if (self.circular) {
+        width = _numColumns * [self currentSize].width;
+        height =_numRows * [self currentSize].height;
+    } else {
+        width = self.numColumns * [self currentSize].width;
+        height = self.numRows * [self currentSize].height;
+    }
     self.contentSize = CGSizeMake(width, height);
     [self.views enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
         UIView *view = (UIView *)obj;
-        view.frame = CGRectMake((((idx) % self.numRows) + 1) * [self currentSize].width, (((idx) / self.numRows) + 1) * [self currentSize].height ,[self currentSize].width, [self currentSize].height);
+        
+        if (self.circular) {
+            view.frame = CGRectMake((((idx) % self.numRows) + 1) * [self currentSize].width, (((idx) / self.numRows) + 1) * [self currentSize].height ,[self currentSize].width, [self currentSize].height);
+        } else {
+            view.frame = CGRectMake((((idx) % self.numRows)) * [self currentSize].width, (((idx) / self.numRows)) * [self currentSize].height ,[self currentSize].width, [self currentSize].height);
+        }
+        
     }];
     
     [self.hiddenTopViews enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
         UIView *hiddenView = (UIView *)obj;
-        hiddenView.frame = CGRectMake((idx + 1) * [self currentSize].width, 0 * [self currentSize].height ,[self currentSize].width, [self currentSize].height);
+        
+        if (self.circular) {
+            hiddenView.frame = CGRectMake((idx + 1) * [self currentSize].width, 0 * [self currentSize].height ,[self currentSize].width, [self currentSize].height);
+        }
+        
+        
         
     }];
     [self.hiddenBottomViews enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
         UIView *hiddenView = (UIView *)obj;
-        hiddenView.frame = CGRectMake((idx + 1) * [self currentSize].width, (_numRows - 1) * [self currentSize].height ,[self currentSize].width, [self currentSize].height);
+        
+        if (self.circular) {
+            hiddenView.frame = CGRectMake((idx + 1) * [self currentSize].width, (_numRows - 1) * [self currentSize].height ,[self currentSize].width, [self currentSize].height);
+        }
+        
         
     }];
     [self.hiddenLeftViews enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
         UIView *hiddenView = (UIView *)obj;
-        hiddenView.frame = CGRectMake(0 * [self currentSize].width, (idx + 1) * [self currentSize].height ,[self currentSize].width, [self currentSize].height);
+        
+        if (self.circular) {
+            hiddenView.frame = CGRectMake(0 * [self currentSize].width, (idx + 1) * [self currentSize].height ,[self currentSize].width, [self currentSize].height);
+        }
         
     }];
     [self.hiddenRightViews enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
         UIView *hiddenView = (UIView *)obj;
-        hiddenView.frame = CGRectMake((_numColumns - 1) * [self currentSize].width, (idx + 1) * [self currentSize].height ,[self currentSize].width, [self currentSize].height);
         
+        if (self.circular) {
+            hiddenView.frame = CGRectMake((_numColumns - 1) * [self currentSize].width, (idx + 1) * [self currentSize].height ,[self currentSize].width, [self currentSize].height);
+        }
     }];
 }
 
@@ -164,32 +222,35 @@
         }
     }
     
-    for (int i = 1; i < _numColumns - 1; i++) {
-        UIView *topRow = [self.dataSource infiniteScrollView:self viewForItemAtIndexPath:[NSIndexPath indexPathForRow:i - 1 inSection:0]];
-        UIView *bottomRow = [self.dataSource infiniteScrollView:self viewForItemAtIndexPath:[NSIndexPath indexPathForRow:i - 1 inSection:self.numRows - 1]];
-
-        bottomRow.frame = CGRectMake(i * [self currentSize].width, 0, [self currentSize].width, [self currentSize].height);
-        topRow.frame = CGRectMake(i * [self currentSize].width, (_numRows - 1) * [self currentSize].height, [self currentSize].width, [self currentSize].height);
-        
-        [self.hiddenBottomViews addObject:topRow];
-        [self.hiddenTopViews addObject:bottomRow];
-        [self addSubview:topRow];
-        [self addSubview:bottomRow];
-        
-        
-    }
     
-    for (int i = 1; i < _numRows - 1; i++) {
-        UIView *leftColumn = [self.dataSource infiniteScrollView:self viewForItemAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:i - 1]];
-        UIView *rightColumn = [self.dataSource infiniteScrollView:self viewForItemAtIndexPath:[NSIndexPath indexPathForRow:self.numColumns - 1 inSection:i - 1]];
-        rightColumn.frame = CGRectMake(0, i * [self currentSize].height, [self currentSize].width, [self currentSize].height);
-        leftColumn.frame = CGRectMake((_numRows - 1) * [self currentSize].width, i * [self currentSize].height, [self currentSize].width, [self currentSize].height);
+    if (self.circular) {
+        for (int i = 1; i < _numColumns - 1; i++) {
+            UIView *topRow = [self.dataSource infiniteScrollView:self viewForItemAtIndexPath:[NSIndexPath indexPathForRow:i - 1 inSection:0]];
+            UIView *bottomRow = [self.dataSource infiniteScrollView:self viewForItemAtIndexPath:[NSIndexPath indexPathForRow:i - 1 inSection:self.numRows - 1]];
+            
+            bottomRow.frame = CGRectMake(i * [self currentSize].width, 0, [self currentSize].width, [self currentSize].height);
+            topRow.frame = CGRectMake(i * [self currentSize].width, (_numRows - 1) * [self currentSize].height, [self currentSize].width, [self currentSize].height);
+            
+            [self.hiddenBottomViews addObject:topRow];
+            [self.hiddenTopViews addObject:bottomRow];
+            [self addSubview:topRow];
+            [self addSubview:bottomRow];
+            
+            
+        }
         
-        [self.hiddenRightViews addObject:leftColumn];
-        [self.hiddenLeftViews addObject:rightColumn];
-        
-        [self addSubview:leftColumn];
-        [self addSubview:rightColumn];
+        for (int i = 1; i < _numRows - 1; i++) {
+            UIView *leftColumn = [self.dataSource infiniteScrollView:self viewForItemAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:i - 1]];
+            UIView *rightColumn = [self.dataSource infiniteScrollView:self viewForItemAtIndexPath:[NSIndexPath indexPathForRow:self.numColumns - 1 inSection:i - 1]];
+            rightColumn.frame = CGRectMake(0, i * [self currentSize].height, [self currentSize].width, [self currentSize].height);
+            leftColumn.frame = CGRectMake((_numRows - 1) * [self currentSize].width, i * [self currentSize].height, [self currentSize].width, [self currentSize].height);
+            
+            [self.hiddenRightViews addObject:leftColumn];
+            [self.hiddenLeftViews addObject:rightColumn];
+            
+            [self addSubview:leftColumn];
+            [self addSubview:rightColumn];
+        }
     }
 }
 
@@ -214,18 +275,23 @@
     NSInteger column = self.contentOffset.x / [self currentSize].width;
     NSInteger row = self.contentOffset.y / [self currentSize].height;
     
-    if (column == _numColumns - 1) {
-        column = 1;
-    } else if (column == 0) {
-        column = _numColumns - 2;
+    
+    if (self.circular) {
+        if (column == _numColumns - 1) {
+            column = 1;
+        } else if (column == 0) {
+            column = _numColumns - 2;
+        }
+        
+        if (row == _numRows - 1) {
+            row = 1;
+        } else if (row == 0) {
+            row = _numRows - 2;
+        }
+        
+        self.contentOffset = CGPointMake(column * self.frame.size.width, row * self.frame.size.height);
     }
     
-    if (row == _numRows - 1) {
-        row = 1;
-    } else if (row == 0) {
-        row = _numRows - 2;
-    }
-    self.contentOffset = CGPointMake(column * self.frame.size.width, row * self.frame.size.height);
 }
 
 
@@ -233,19 +299,25 @@
     NSInteger column = offset.x / [self currentSize].width;
     NSInteger row = offset.y / [self currentSize].height;
     
-    if (column == _numColumns - 1) {
-        column = 1;
-    } else if (column == 0) {
-        column = _numColumns - 2;
+    
+    if (self.circular) {
+        if (column == _numColumns - 1) {
+            column = 1;
+        } else if (column == 0) {
+            column = _numColumns - 2;
+        }
+        
+        if (row == _numRows - 1) {
+            row = 1;
+        } else if (row == 0) {
+            row = _numRows - 2;
+        }
+        return [NSIndexPath indexPathForRow:column - 1 inSection:row - 1];
+    } else {
+        return [NSIndexPath indexPathForRow:column inSection:row];
     }
     
-    if (row == _numRows - 1) {
-        row = 1;
-    } else if (row == 0) {
-        row = _numRows - 2;
-    }
     
-    return [NSIndexPath indexPathForRow:column - 1 inSection:row - 1];
 }
 
 /*

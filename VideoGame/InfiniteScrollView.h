@@ -17,6 +17,7 @@
 @property (weak, nonatomic) id<InfiniteScrollViewDataSource> dataSource;
 @property (nonatomic, assign) NSInteger numRows;
 @property (nonatomic, assign) NSInteger numColumns;
+@property (nonatomic, assign) BOOL circular;
 
 - (id)initWithIndexPath:(NSIndexPath *)indexPath;
 - (void)reloadData;
