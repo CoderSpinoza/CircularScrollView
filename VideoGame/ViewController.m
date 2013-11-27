@@ -32,9 +32,6 @@
     [super viewDidLoad];
 	// Do any additional setup after loading the view, typically from a nib.
     
-    self.infiniteScrollView.numRows = 3;
-    self.infiniteScrollView.numColumns = 3;
-    
     self.dataArray = [[NSMutableArray alloc] init];
     
     self.infiniteScrollView.infiniteDelegate = self;
@@ -50,8 +47,11 @@
     self.parser.shouldResolveExternalEntities = YES;
     [self.parser parse];
     
-    
-    
+}
+
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+    [self.currentPlayer play];
 }
 
 - (void)didReceiveMemoryWarning
@@ -88,7 +88,9 @@
         [view.layer addSublayer:playerLayer];
         [player play];
         
+        [view addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(playCurrentPlayer)]];
         
+        view.userInteractionEnabled = YES;
         self.currentPlayer = player;
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(playerItemDidReachEnd:) name:AVPlayerItemDidPlayToEndTimeNotification object:player.currentItem];
         
@@ -126,6 +128,7 @@
         
         [view addSubview:imageView];
     }
+
     return view;
 }
 
@@ -184,7 +187,20 @@
     
 }
 - (void)parserDidEndDocument:(NSXMLParser *)parser {
+    
+    self.infiniteScrollView.numRows = self.dataArray.count;
+    NSMutableArray *firstRow = [self.dataArray objectAtIndex:0];
+    self.infiniteScrollView.numColumns = firstRow.count;
+    
+    
     [self.infiniteScrollView reloadData];
+    
+    
+    [self infiniteScrollView:self.infiniteScrollView scrolledToIndexPath:[NSIndexPath indexPathForRow:0 inSection:0]];
+}
+
+- (void)playCurrentPlayer {
+    [self.currentPlayer play];
 }
 
 @end

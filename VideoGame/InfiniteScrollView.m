@@ -165,8 +165,8 @@
     }
     
     for (int i = 1; i < _numColumns - 1; i++) {
-        UIView *topRow = [self.dataSource infiniteScrollView:self viewForItemAtIndexPath:[NSIndexPath indexPathForRow:i - 1 inSection:self.numRows - 1]];
-        UIView *bottomRow = [self.dataSource infiniteScrollView:self viewForItemAtIndexPath:[NSIndexPath indexPathForRow:i - 1 inSection:0]];
+        UIView *topRow = [self.dataSource infiniteScrollView:self viewForItemAtIndexPath:[NSIndexPath indexPathForRow:i - 1 inSection:0]];
+        UIView *bottomRow = [self.dataSource infiniteScrollView:self viewForItemAtIndexPath:[NSIndexPath indexPathForRow:i - 1 inSection:self.numRows - 1]];
 
         bottomRow.frame = CGRectMake(i * [self currentSize].width, 0, [self currentSize].width, [self currentSize].height);
         topRow.frame = CGRectMake(i * [self currentSize].width, (_numRows - 1) * [self currentSize].height, [self currentSize].width, [self currentSize].height);
