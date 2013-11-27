@@ -20,8 +20,8 @@
 @property (strong, nonatomic) NSDictionary *column;
 @property (strong, nonatomic) NSMutableArray *row;
 @property (strong, nonatomic) NSDictionary *video;
-@property (strong, nonatomic) NSString *fileName;
-@property (strong, nonatomic) NSString *fileExtension;
+@property (strong, nonatomic) NSMutableString *fileName;
+@property (strong, nonatomic) NSMutableString *fileExtension;
 
 @end
 
@@ -35,35 +35,10 @@
     self.infiniteScrollView.numRows = 3;
     self.infiniteScrollView.numColumns = 3;
     
-//    self.dataArray = [[NSMutableArray alloc] initWithCapacity:3];
-//    for (int i = 0; i < 3; i++) {
-//        [self.dataArray addObject:[[NSMutableArray alloc] initWithCapacity:3]];
-//    }
-    
-    
-    
-    // Creating a data array. Currently hardcoded. Have to import from xml or json.
-//    int k;
-//    for (int i = 0; i < 3; i++) {
-//        k = 0;
-//        for (int j = 0; j < 3; j++) {
-//            NSDictionary *data;
-//            if (k == 0) {
-//                data = @{@"filePath": @"fire"};
-//            } else if (k == 1){
-//                data = @{@"filePath": @"hills"};
-//            } else {
-//                data = @{@"filePath": @"dancing"};
-//            }
-//            
-//            [[self.dataArray objectAtIndex:i] insertObject:data atIndex:j];
-//            k++;
-//            
-//        }
-//    }
-    
-    
     self.dataArray = [[NSMutableArray alloc] init];
+    
+    self.infiniteScrollView.infiniteDelegate = self;
+    self.infiniteScrollView.dataSource = self;
     
     NSString *xmlPath = [[NSBundle mainBundle] pathForResource:@"videos" ofType:@"xml"];
     NSData *xmlData = [NSData dataWithContentsOfFile:xmlPath];
@@ -71,13 +46,12 @@
     self.parser = [[NSXMLParser alloc] initWithData:xmlData];
     self.parser.delegate = self;
     
-    self.parser.shouldResolveExternalEntities = NO;
+    
+    self.parser.shouldResolveExternalEntities = YES;
     [self.parser parse];
     
-    self.infiniteScrollView.infiniteDelegate = self;
-    self.infiniteScrollView.dataSource = self;
     
-//    [self.infiniteScrollView reloadData];
+    
 }
 
 - (void)didReceiveMemoryWarning
@@ -102,9 +76,9 @@
         AVPlayerView *view = (AVPlayerView *)[infiniteScrollView viewForIndexPath:indexPath];
         NSDictionary *data = [[self.dataArray objectAtIndex:indexPath.section] objectAtIndex:indexPath.row];
         
-        NSString *resource = [NSString stringWithFormat:@"%@", [data objectForKey:@"filePath"]];
+        NSURL *url = [NSURL fileURLWithPath:[[NSBundle mainBundle] pathForResource:[NSString stringWithFormat:@"%@", [data objectForKey:@"fileName"]] ofType:[data objectForKey:@"fileExtension"]]];
         
-        AVPlayer *player = [[AVPlayer alloc] initWithPlayerItem:[[AVPlayerItem alloc] initWithURL:[NSURL fileURLWithPath:[[NSBundle mainBundle] pathForResource:resource ofType:@"mov"]]]];
+        AVPlayer *player = [[AVPlayer alloc] initWithPlayerItem:[[AVPlayerItem alloc] initWithURL:url]];
         
         AVPlayerLayer *playerLayer = [AVPlayerLayer playerLayerWithPlayer:player];
         playerLayer.frame = CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height);
@@ -141,7 +115,7 @@
     UIImageView *imageView = (UIImageView *)[view viewWithTag:1];
     if (!imageView) {
         NSDictionary *data = [[self.dataArray objectAtIndex:indexPath.section] objectAtIndex:indexPath.row];
-        AVURLAsset *asset = [AVURLAsset URLAssetWithURL:[NSURL fileURLWithPath:[[NSBundle mainBundle] pathForResource:[NSString stringWithFormat:@"%@", [data objectForKey:@"filePath"]] ofType:@"mov"]] options:nil];
+        AVURLAsset *asset = [AVURLAsset URLAssetWithURL:[NSURL fileURLWithPath:[[NSBundle mainBundle] pathForResource:[NSString stringWithFormat:@"%@", [data objectForKey:@"fileName"]] ofType:[data objectForKey:@"fileExtension"]]] options:nil];
         AVAssetImageGenerator *imageGenerator = [AVAssetImageGenerator assetImageGeneratorWithAsset:asset];
         UIImage *image = [UIImage imageWithCGImage:[imageGenerator copyCGImageAtTime:CMTimeMake(0, 1) actualTime:nil error:nil]];
         
@@ -172,41 +146,45 @@
 - (void)parser:(NSXMLParser *)parser didStartElement:(NSString *)elementName namespaceURI:(NSString *)namespaceURI qualifiedName:(NSString *)qName attributes:(NSDictionary *)attributeDict {
     self.element = elementName;
     
-    NSLog(@"%@ started", self.element);
     if ([self.element isEqualToString:@"row"]) {
         self.row = [[NSMutableArray alloc] init];
     } else if ([self.element isEqualToString:@"column"]) {
     } else if ([self.element isEqualToString:@"video"]) {
         self.video = [[NSMutableDictionary alloc] init];
+        self.fileName = [[NSMutableString alloc] init];
+        self.fileExtension = [[NSMutableString alloc] init];
     }
 }
 
 - (void)parser:(NSXMLParser *)parser didEndElement:(NSString *)elementName namespaceURI:(NSString *)namespaceURI qualifiedName:(NSString *)qName {
-    NSLog(@"%@ ended", self.element);
-    if ([self.element isEqualToString:@"row"]) {
+    if ([elementName isEqualToString:@"row"]) {
         [self.dataArray addObject:self.row];
-    } else if ([self.element isEqualToString:@"column"]) {
+    } else if ([elementName isEqualToString:@"column"]) {
         
-    } else if ([self.element isEqualToString:@"video"]) {
+    } else if ([elementName isEqualToString:@"video"]) {
         self.video = @{@"fileName": self.fileName, @"fileExtension": self.fileExtension};
         [self.row addObject:self.video];
     }
 }
 
 - (void)parser:(NSXMLParser *)parser foundCharacters:(NSString *)string {
-    if ([self.element isEqualToString:@"fileName"]) {
-        self.fileName = string;
-    } else if ([self.element isEqualToString:@"fileExtension"]) {
-        self.fileExtension = string;
+    if (self.storyboard) {
+        if ([self.element isEqualToString:@"fileName"]) {
+            NSString *trimmedString = [string stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+            [self.fileName appendString:trimmedString];
+        } else if ([self.element isEqualToString:@"fileExtension"]) {
+            NSString *trimmedString = [string stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+            [self.fileExtension appendString:trimmedString];
+        }
     }
+    
 }
 
 - (void)parserDidStartDocument:(NSXMLParser *)parser {
     
 }
 - (void)parserDidEndDocument:(NSXMLParser *)parser {
-    NSLog(@"%@", self.dataArray);
-//    [self.infiniteScrollView reloadData];
+    [self.infiniteScrollView reloadData];
 }
 
 @end
